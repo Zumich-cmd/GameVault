@@ -21,42 +21,6 @@
 
 ---
 
-## Технології
-
-У проєкті використовуються такі технології:
-
-- C++
-- Qt Framework
-- Qt Designer
-- Steam Web API
-- JSON
-
----
-
-## Структура проєкту
-GameVault
-│
-├── main.cpp
-├── mainwindow.cpp
-├── mainwindow.h
-│
-├── models
-│ ├── game.h
-│ ├── achievement.h
-│
-├── services
-│ ├── library.h
-│ ├── steamservice.h
-│
-├── dialogs
-│ ├── addgamedialog.h
-│
-└── ui
-├── mainwindow.ui
-
-
----
-
 ## План розробки
 
 Проєкт розробляється протягом одного місяця та поділений на декілька етапів:
