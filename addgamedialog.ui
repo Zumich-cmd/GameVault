@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AddGameDialog</class>
+ <widget class="QDialog" name="AddGameDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>520</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Добавить игру</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+QDialog {
+    background-color: #0d1117;
+    color: white;
+    font-family: "Segoe UI";
+}
+
+QLabel {
+    font-size: 10pt;
+}
+
+QLineEdit, QComboBox, QSpinBox {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 6px;
+    color: white;
+}
+
+QPushButton {
+    background-color: #21262d;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+QPushButton:hover {
+    background-color: #30363d;
+}
+
+QPushButton#saveGameButton {
+    background-color: #c62828;
+    font-weight: bold;
+}
+
+QPushButton#saveGameButton:hover {
+    background-color: #e53935;
+}
+</string>
+  </property>
+
+  <layout class="QVBoxLayout">
+
+   <item>
+    <widget class="QLabel">
+     <property name="text">
+      <string>Добавить новую игру</string>
+     </property>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QLineEdit" name="titleLineEdit">
+     <property name="placeholderText">
+      <string>Название игры</string>
+     </property>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QComboBox" name="genreComboBox">
+     <item><property name="text"><string>RPG</string></property></item>
+     <item><property name="text"><string>Action</string></property></item>
+     <item><property name="text"><string>Roguelike</string></property></item>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QComboBox" name="platformComboBox">
+     <item><property name="text"><string>Steam</string></property></item>
+     <item><property name="text"><string>Epic Games</string></property></item>
+     <item><property name="text"><string>Other</string></property></item>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QSpinBox" name="hoursSpinBox">
+     <property name="maximum">
+      <number>9999</number>
+     </property>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QSpinBox" name="totalAchievementsSpinBox">
+     <property name="maximum">
+      <number>1000</number>
+     </property>
+    </widget>
+   </item>
+
+   <item>
+    <widget class="QSpinBox" name="openedAchievementsSpinBox">
+     <property name="maximum">
+      <number>1000</number>
+     </property>
+    </widget>
+   </item>
+
+   <item>
+    <layout class="QHBoxLayout">
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="text">
+        <string>Отмена</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveGameButton">
+       <property name="text">
+        <string>Сохранить</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
