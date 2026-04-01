@@ -14,10 +14,14 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow() override;
+    MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+private slots:
+    void onGameSelected(); // обробка вибору гри
 
 private:
     Ui::MainWindow *ui;
 };
+
 #endif // MAINWINDOW_H
