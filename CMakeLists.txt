@@ -19,6 +19,8 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        addgamedialog.cpp
+        addgamedialog.h
         ${TS_FILES}
 )
 
@@ -72,6 +74,10 @@ install(TARGETS GameVaultv1
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+set(APP_ICON_RESOURCE_WINDOWS app_icon.rc)
+
+target_sources(GameVaultv1 PRIVATE ${APP_ICON_RESOURCE_WINDOWS})
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(GameVaultv1)
