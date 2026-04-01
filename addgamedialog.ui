@@ -18,7 +18,7 @@
 QDialog {
     background-color: #0d1117;
     color: white;
-    font-family: "Segoe UI";
+    font-family: &quot;Segoe UI&quot;;
 }
 
 QLabel {
@@ -53,41 +53,72 @@ QPushButton#saveGameButton:hover {
 }
 </string>
   </property>
-
   <layout class="QVBoxLayout">
-
    <item>
-    <widget class="QLabel">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <family>Roboto</family>
+       <pointsize>10</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LayoutDirection::LeftToRight</enum>
+     </property>
      <property name="text">
-      <string>Добавить новую игру</string>
+      <string>Додати нову гру</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
      </property>
     </widget>
    </item>
-
    <item>
     <widget class="QLineEdit" name="titleLineEdit">
      <property name="placeholderText">
-      <string>Название игры</string>
+      <string>Назва гри</string>
      </property>
     </widget>
    </item>
-
    <item>
     <widget class="QComboBox" name="genreComboBox">
-     <item><property name="text"><string>RPG</string></property></item>
-     <item><property name="text"><string>Action</string></property></item>
-     <item><property name="text"><string>Roguelike</string></property></item>
+     <item>
+      <property name="text">
+       <string>RPG</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Action</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Roguelike</string>
+      </property>
+     </item>
     </widget>
    </item>
-
    <item>
     <widget class="QComboBox" name="platformComboBox">
-     <item><property name="text"><string>Steam</string></property></item>
-     <item><property name="text"><string>Epic Games</string></property></item>
-     <item><property name="text"><string>Other</string></property></item>
+     <item>
+      <property name="text">
+       <string>Steam</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Epic Games</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Other</string>
+      </property>
+     </item>
     </widget>
    </item>
-
    <item>
     <widget class="QSpinBox" name="hoursSpinBox">
      <property name="maximum">
@@ -95,7 +126,6 @@ QPushButton#saveGameButton:hover {
      </property>
     </widget>
    </item>
-
    <item>
     <widget class="QSpinBox" name="totalAchievementsSpinBox">
      <property name="maximum">
@@ -103,7 +133,6 @@ QPushButton#saveGameButton:hover {
      </property>
     </widget>
    </item>
-
    <item>
     <widget class="QSpinBox" name="openedAchievementsSpinBox">
      <property name="maximum">
@@ -111,26 +140,27 @@ QPushButton#saveGameButton:hover {
      </property>
     </widget>
    </item>
-
    <item>
-    <layout class="QHBoxLayout">
+    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QPushButton" name="cancelButton">
+      <widget class="QPushButton" name="saveGameButton">
        <property name="text">
-        <string>Отмена</string>
+        <string>Зберегти</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="saveGameButton">
+      <widget class="QPushButton" name="cancelButton">
+       <property name="layoutDirection">
+        <enum>Qt::LayoutDirection::RightToLeft</enum>
+       </property>
        <property name="text">
-        <string>Сохранить</string>
+        <string>Скасувати</string>
        </property>
       </widget>
      </item>
     </layout>
    </item>
-
   </layout>
  </widget>
  <resources/>
