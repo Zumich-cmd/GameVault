@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "achievementsdialog.h"
 
 // Для групування кнопок
 #include <QButtonGroup>
@@ -110,12 +111,27 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Оновлення правої панелі
     onGameSelected();
+
+    // Відкриття вікна досягнень
+    connect(ui->viewAchievementsButton, &QPushButton::clicked,
+            this, &MainWindow::openAchievementsDialog);
 }
 
 // Деструктор
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+// Відкриття діалогу досягнень
+void MainWindow::openAchievementsDialog()
+{
+    AchievementsDialog dialog(this);
+
+    // Передаємо назву поточної гри
+    dialog.setGameTitle(ui->gameNameLabel->text());
+
+    dialog.exec();
 }
 
 // Обробка вибору гри

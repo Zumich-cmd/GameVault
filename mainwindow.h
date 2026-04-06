@@ -19,6 +19,7 @@ public:
 
 private slots:
     void onGameSelected(); // обробка вибору гри
+    void openAchievementsDialog();
 
 private:
     Ui::MainWindow *ui;
