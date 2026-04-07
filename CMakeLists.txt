@@ -81,6 +81,12 @@ install(TARGETS GameVaultv1
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+add_custom_command(TARGET GameVaultv1 POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/assets
+    $<TARGET_FILE_DIR:GameVaultv1>/assets
+)
+
 set(APP_ICON_RESOURCE_WINDOWS app_icon.rc)
 
 target_sources(GameVaultv1 PRIVATE ${APP_ICON_RESOURCE_WINDOWS})
