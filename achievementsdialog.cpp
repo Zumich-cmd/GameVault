@@ -1,5 +1,6 @@
 #include "achievementsdialog.h"
 #include "ui_achievementsdialog.h"
+#include "buttonhoveranimator.h"
 
 #include <QFile>
 #include <QCoreApplication>
@@ -25,8 +26,21 @@ AchievementsDialog::AchievementsDialog(QWidget *parent)
     connect(ui->closeButton, &QPushButton::clicked,
             this, &QDialog::accept);
 
+    // Ставимо курсор-указівник для кнопки дії
+    ui->closeButton->setCursor(Qt::PointingHandCursor);
+
+    // Додаємо плавну анімацію зміни кольору при наведенні
+    installHoverAnimation(
+        ui->closeButton,
+        ButtonHoverPalette{QColor("#d32f2f"), QColor("#ff3d3d"), QColor("#b92a2a"), QColor(), QColor(), false},
+        this
+        );
+
     ui->achievementsList->setSelectionMode(QAbstractItemView::NoSelection);
     ui->achievementsList->setFocusPolicy(Qt::NoFocus);
+    ui->achievementsList->setWordWrap(true);
+    ui->achievementsList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    ui->achievementsList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 }
 
 // Деструктор

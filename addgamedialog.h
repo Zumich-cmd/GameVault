@@ -36,6 +36,9 @@ public:
     // Отримати відкриті досягнення
     int getOpenedAchievements() const;
 
+    // Отримати постер
+    QString getPosterPath() const;
+
 private:
     // Вказівник на UI форму (елементи з Designer)
     Ui::AddGameDialog *ui;

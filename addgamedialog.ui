@@ -141,6 +141,20 @@ QPushButton#saveGameButton:hover {
     </widget>
    </item>
    <item>
+    <widget class="QPushButton" name="choosePosterButton">
+     <property name="text">
+      <string>Обрати постер</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="posterPathLineEdit">
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
       <widget class="QPushButton" name="saveGameButton">

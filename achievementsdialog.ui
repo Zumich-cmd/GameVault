@@ -70,7 +70,11 @@ QPushButton {
 }
 
 QPushButton:hover {
-    background-color: #2a313d;
+    background-color: #323b49;
+}
+
+QPushButton:pressed {
+    background-color: #262d38;
 }
 
 QPushButton#closeButton {
@@ -155,7 +159,14 @@ QScrollBar::sub-page:vertical {
        </widget>
       </item>
       <item>
-       <widget class="QListWidget" name="achievementsList"/>
+       <widget class="QListWidget" name="achievementsList">
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="closeButton">

@@ -24,6 +24,8 @@ set(PROJECT_SOURCES
         addgamedialog.h
         achievementsdialog.h
         achievementsdialog.cpp
+        buttonhoveranimator.h
+        buttonhoveranimator.cpp
         ${TS_FILES}
 )
 
