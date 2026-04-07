@@ -1,3 +1,4 @@
+
 cmake_minimum_required(VERSION 3.16)
 
 project(GameVaultv1 VERSION 0.1 LANGUAGES CXX)
@@ -19,6 +20,10 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        addgamedialog.cpp
+        addgamedialog.h
+        achievementsdialog.h
+        achievementsdialog.cpp
         ${TS_FILES}
 )
 
@@ -27,8 +32,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         addgamedialog.ui
-        achievementsdialog.h
-        achievementsdialog.cpp
         achievementsdialog.ui
     )
 # Define target properties for Android with Qt 6 as:
@@ -75,6 +78,10 @@ install(TARGETS GameVaultv1
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+set(APP_ICON_RESOURCE_WINDOWS app_icon.rc)
+
+target_sources(GameVaultv1 PRIVATE ${APP_ICON_RESOURCE_WINDOWS})
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(GameVaultv1)
