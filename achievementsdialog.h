@@ -16,6 +16,7 @@ public:
     ~AchievementsDialog();
 
     void setGameTitle(const QString &title);
+    void loadAchievementsForGame(const QString &gameTitle);
 
 private:
     Ui::AchievementsDialog *ui;
