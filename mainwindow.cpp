@@ -20,11 +20,9 @@
 #include <QFrame>
 #include <QProgressBar>
 #include <QFontMetrics>
-
 #include <QButtonGroup>
 #include <QListWidgetItem>
 #include <QApplication>
-
 #include <QPainter>
 #include <QPainterPath>
 
@@ -36,7 +34,6 @@ QPixmap makeRoundedThumb(const QPixmap &source, const QSize &targetSize)
         return QPixmap();
     }
 
-    // Масштабуємо під розмір прев'ю з акуратним центральним crop
     QPixmap scaled = source.scaled(targetSize, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
     const int x = qMax(0, (scaled.width() - targetSize.width()) / 2);
     const int y = qMax(0, (scaled.height() - targetSize.height()) / 2);
@@ -80,38 +77,17 @@ QString defaultThumbPathForGame(const QString &title)
 
 QString defaultCoverPathForGame(const QString &title)
 {
-    const QString basePath = QCoreApplication::applicationDirPath();
-
-    if (title == "Elden Ring") {
-        return basePath + "/assets/achievements/icons/elden_ring/elden_lord.png";
-    }
-    if (title == "Hades") {
-        return basePath + "/assets/achievements/icons/hades/death_dealer.png";
-    }
-    if (title == "Hollow Knight") {
-        return basePath + "/assets/achievements/icons/hollow_knight/hollow_knight.png";
-    }
-    if (title == "Cyberpunk 2077") {
-        return basePath + "/assets/achievements/icons/elden_ring/radahn.png";
-    }
-    if (title == "Sekiro") {
-        return basePath + "/assets/achievements/icons/elden_ring/morgott.png";
-    }
-
-    return QString();
+    return defaultThumbPathForGame(title);
 }
 
 }
 
-// Конструктор головного вікна
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    // Ініціалізація UI
     ui->setupUi(this);
 
-    // Зберігаємо поточну (dark) тему зі стилів Designer
     darkStyleSheet = this->styleSheet();
     lightStyleSheet =
         "QMainWindow, QWidget {"
@@ -137,10 +113,8 @@ MainWindow::MainWindow(QWidget *parent)
         "}"
         "QPushButton:hover { background-color: #dde6f3; }";
 
-    // Назва вікна
     setWindowTitle("GameVault");
 
-    // Перемикач sidebar (активна тільки одна кнопка)
     QButtonGroup *group = new QButtonGroup(this);
     ui->libraryButton->setCheckable(true);
     ui->achievementsButton->setCheckable(true);
@@ -153,7 +127,6 @@ MainWindow::MainWindow(QWidget *parent)
     group->setExclusive(true);
     ui->libraryButton->setChecked(true);
 
-    // Прибираємо текст у progress bar
     ui->progressBar->setTextVisible(false);
 
     // Очищення та заповнення фільтрів
@@ -166,7 +139,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->platformComboBox->clear();
     ui->platformComboBox->addItems({"Платформа", "Steam", "Epic Games", "Other"});
 
-    // Очищення списку ігор
+    // ФІКС БАГА З ПОШУКОМ: очищаємо поле, щоб слово "Пошук..." не ховало ігри
+    ui->searchLineEdit->clear();
+
     ui->gamesList->clear();
     ui->gamesList->setWordWrap(true);
     ui->gamesList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -174,30 +149,21 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gamesList->setSelectionMode(QAbstractItemView::SingleSelection);
     ui->gamesList->verticalScrollBar()->setSingleStep(10);
 
-    // Підключення сигналів
-    connect(ui->gamesList, &QListWidget::itemClicked,
-            this, &MainWindow::onGameSelected);
-    connect(ui->gamesList, &QListWidget::currentRowChanged,
-            this, [this](int) { updateGameRowsSelection(); });
+    connect(ui->gamesList, &QListWidget::itemClicked, this, &MainWindow::onGameSelected);
+    connect(ui->gamesList, &QListWidget::currentRowChanged, this, [this](int) { updateGameRowsSelection(); });
+    connect(ui->addGameButton, &QPushButton::clicked, this, &MainWindow::onAddGameClicked);
+    connect(ui->bottomAddGameButton, &QPushButton::clicked, this, &MainWindow::onAddGameClicked);
+    connect(ui->viewAchievementsButton, &QPushButton::clicked, this, &MainWindow::openAchievementsDialog);
+    connect(ui->libraryButton, &QPushButton::clicked, this, &MainWindow::showLibraryPage);
+    connect(ui->achievementsButton, &QPushButton::clicked, this, &MainWindow::showAchievementsPage);
+    connect(ui->steamImportButton, &QPushButton::clicked, this, &MainWindow::showSteamImportPage);
+    connect(ui->settingsButton, &QPushButton::clicked, this, &MainWindow::showSettingsPage);
 
-    connect(ui->addGameButton, &QPushButton::clicked,
-            this, &MainWindow::onAddGameClicked);
+    // Підключення пошуку та фільтрів
+    connect(ui->searchLineEdit, &QLineEdit::textChanged, this, &MainWindow::filterGames);
+    connect(ui->genreComboBox, &QComboBox::currentTextChanged, this, &MainWindow::filterGames);
+    connect(ui->platformComboBox, &QComboBox::currentTextChanged, this, &MainWindow::filterGames);
 
-    connect(ui->bottomAddGameButton, &QPushButton::clicked,
-            this, &MainWindow::onAddGameClicked);
-
-    connect(ui->viewAchievementsButton, &QPushButton::clicked,
-            this, &MainWindow::openAchievementsDialog);
-    connect(ui->libraryButton, &QPushButton::clicked,
-            this, &MainWindow::showLibraryPage);
-    connect(ui->achievementsButton, &QPushButton::clicked,
-            this, &MainWindow::showAchievementsPage);
-    connect(ui->steamImportButton, &QPushButton::clicked,
-            this, &MainWindow::showSteamImportPage);
-    connect(ui->settingsButton, &QPushButton::clicked,
-            this, &MainWindow::showSettingsPage);
-
-    // Налаштування груп кнопок на сторінці налаштувань
     auto *themeGroup = new QButtonGroup(this);
     themeGroup->setExclusive(true);
     themeGroup->addButton(ui->themeDarkButton);
@@ -213,7 +179,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->langUkButton, &QPushButton::clicked, this, &MainWindow::applyUkrainianLanguage);
     connect(ui->langEnButton, &QPushButton::clicked, this, &MainWindow::applyEnglishLanguage);
 
-    // Ставимо курсор-указівник для інтерактивних кнопок
     ui->libraryButton->setCursor(Qt::PointingHandCursor);
     ui->achievementsButton->setCursor(Qt::PointingHandCursor);
     ui->steamImportButton->setCursor(Qt::PointingHandCursor);
@@ -224,124 +189,48 @@ MainWindow::MainWindow(QWidget *parent)
     ui->libraryAddButton->setCursor(Qt::PointingHandCursor);
     ui->addGameButton->setVisible(false);
 
-    // Додаємо плавну анімацію зміни кольору при наведенні
-    installHoverAnimation(
-        ui->libraryButton,
-        ButtonHoverPalette{QColor("#11161d"), QColor("#252d39"), QColor("#1b222d"), QColor("#d32f2f"), QColor("#ff3d3d"), true},
-        this
-        );
-    installHoverAnimation(
-        ui->achievementsButton,
-        ButtonHoverPalette{QColor("#11161d"), QColor("#252d39"), QColor("#1b222d"), QColor("#d32f2f"), QColor("#ff3d3d"), true},
-        this
-        );
-    installHoverAnimation(
-        ui->steamImportButton,
-        ButtonHoverPalette{QColor("#11161d"), QColor("#252d39"), QColor("#1b222d"), QColor("#d32f2f"), QColor("#ff3d3d"), true},
-        this
-        );
-    installHoverAnimation(
-        ui->settingsButton,
-        ButtonHoverPalette{QColor("#11161d"), QColor("#252d39"), QColor("#1b222d"), QColor("#d32f2f"), QColor("#ff3d3d"), true},
-        this
-        );
-    installHoverAnimation(
-        ui->addGameButton,
-        ButtonHoverPalette{QColor("#d32f2f"), QColor("#ff3d3d"), QColor("#b92a2a"), QColor(), QColor(), false},
-        this
-        );
-    installHoverAnimation(
-        ui->bottomAddGameButton,
-        ButtonHoverPalette{QColor("#942B2B"), QColor("#b33636"), QColor("#7a2323"), QColor(), QColor(), false},
-        this
-        );
-    installHoverAnimation(
-        ui->viewAchievementsButton,
-        ButtonHoverPalette{QColor("#1c222b"), QColor("#323b49"), QColor("#262d38"), QColor(), QColor(), false},
-        this
-        );
-    installHoverAnimation(
-        ui->libraryAddButton,
-        ButtonHoverPalette{QColor("#d32f2f"), QColor("#ff3d3d"), QColor("#b92a2a"), QColor(), QColor(), false},
-        this
-        );
+    installHoverAnimation(ui->libraryButton, ButtonHoverPalette{QColor("#11161d"), QColor("#252d39"), QColor("#1b222d"), QColor("#d32f2f"), QColor("#ff3d3d"), true}, this);
+    installHoverAnimation(ui->achievementsButton, ButtonHoverPalette{QColor("#11161d"), QColor("#252d39"), QColor("#1b222d"), QColor("#d32f2f"), QColor("#ff3d3d"), true}, this);
+    installHoverAnimation(ui->steamImportButton, ButtonHoverPalette{QColor("#11161d"), QColor("#252d39"), QColor("#1b222d"), QColor("#d32f2f"), QColor("#ff3d3d"), true}, this);
+    installHoverAnimation(ui->settingsButton, ButtonHoverPalette{QColor("#11161d"), QColor("#252d39"), QColor("#1b222d"), QColor("#d32f2f"), QColor("#ff3d3d"), true}, this);
+    installHoverAnimation(ui->addGameButton, ButtonHoverPalette{QColor("#d32f2f"), QColor("#ff3d3d"), QColor("#b92a2a"), QColor(), QColor(), false}, this);
+    installHoverAnimation(ui->bottomAddGameButton, ButtonHoverPalette{QColor("#942B2B"), QColor("#b33636"), QColor("#7a2323"), QColor(), QColor(), false}, this);
+    installHoverAnimation(ui->viewAchievementsButton, ButtonHoverPalette{QColor("#1c222b"), QColor("#323b49"), QColor("#262d38"), QColor(), QColor(), false}, this);
+    installHoverAnimation(ui->libraryAddButton, ButtonHoverPalette{QColor("#d32f2f"), QColor("#ff3d3d"), QColor("#b92a2a"), QColor(), QColor(), false}, this);
     connect(ui->libraryAddButton, &QPushButton::clicked, this, &MainWindow::onAddGameClicked);
 
-    // Налаштування списку останніх досягнень
     ui->recentAchievementsList->setSelectionMode(QAbstractItemView::NoSelection);
     ui->recentAchievementsList->setFocusPolicy(Qt::NoFocus);
     ui->recentAchievementsList->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     ui->recentAchievementsList->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->recentAchievementsList->setWordWrap(true);
     ui->recentAchievementsList->setTextElideMode(Qt::ElideRight);
-    // Стилізуємо scrollbar під заданий дизайн
+
     ui->recentAchievementsList->verticalScrollBar()->setStyleSheet(
-        "QScrollBar:vertical {"
-        "  background: #232E33;"
-        "  width: 8px;"
-        "  margin: 0px;"
-        "  border-radius: 4px;"
-        "  border: none;"
-        "}"
-        "QScrollBar::groove:vertical {"
-        "  background: transparent;"
-        "  border-radius: 4px;"
-        "  margin: 0px;"
-        "}"
-        "QScrollBar::handle:vertical {"
-        "  background: #612222;"
-        "  min-height: 28px;"
-        "  border-radius: 4px;"
-        "  border: none;"
-        "  margin: 0px;"
-        "}"
-        "QScrollBar::handle:vertical:hover {"
-        "  background: #7a2b2b;"
-        "}"
-        "QScrollBar::handle:vertical:pressed {"
-        "  background: #8f3333;"
-        "}"
-        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {"
-        "  background: transparent;"
-        "  border: none;"
-        "}"
-        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {"
-        "  height: 0px;"
-        "  width: 0px;"
-        "  margin: 0px;"
-        "  padding: 0px;"
-        "  background: transparent;"
-        "  border: none;"
-        "}"
-        "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {"
-        "  background: transparent;"
-        "  height: 0px;"
-        "}"
+        "QScrollBar:vertical { background: #232E33; width: 8px; margin: 0px; border-radius: 4px; border: none; }"
+        "QScrollBar::groove:vertical { background: transparent; border-radius: 4px; margin: 0px; }"
+        "QScrollBar::handle:vertical { background: #612222; min-height: 28px; border-radius: 4px; border: none; margin: 0px; }"
+        "QScrollBar::handle:vertical:hover { background: #7a2b2b; }"
+        "QScrollBar::handle:vertical:pressed { background: #8f3333; }"
+        "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical { background: transparent; border: none; }"
+        "QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical { height: 0px; width: 0px; margin: 0px; padding: 0px; background: transparent; border: none; }"
+        "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical { background: transparent; height: 0px; }"
         );
 
-    // Тестові ігри
-    games.push_back({"Elden Ring", "RPG", "Steam", 145, 50, 39, ""});
-    games.push_back({"Cyberpunk 2077", "RPG", "Steam", 120, 57, 32, ""});
-    games.push_back({"Hades", "Roguelike", "Steam", 64, 49, 21, ""});
-    games.push_back({"Hollow Knight", "Metroidvania", "Steam", 71, 63, 47, ""});
-    games.push_back({"Sekiro", "Action", "Steam", 58, 34, 28, ""});
-
-    // Оновлюємо список ігор
-    updateGamesListUI();
+    // Завантажуємо ігри з JSON
+    loadGamesFromJson();
+    filterGames();
 }
 
-// Деструктор
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
-// Відкриття діалогу додавання гри
 void MainWindow::onAddGameClicked()
 {
     AddGameDialog dialog(this);
 
-    // Якщо користувач натиснув "Зберегти"
     if (dialog.exec() == QDialog::Accepted) {
         Game newGame;
         newGame.title = dialog.getTitle();
@@ -350,21 +239,40 @@ void MainWindow::onAddGameClicked()
         newGame.hours = dialog.getHours();
         newGame.totalAchievements = dialog.getTotalAchievements();
         newGame.openedAchievements = dialog.getOpenedAchievements();
-        newGame.posterPath = dialog.getPosterPath();
 
-        // Додаємо гру в масив
+        // --- Логіка збереження постера в assets ---
+        QString originalPoster = dialog.getPosterPath();
+        QString savedPosterPath = originalPoster;
+
+        if (!originalPoster.isEmpty()) {
+            QDir dir;
+            if (!dir.exists("assets")) dir.mkpath("assets");
+
+            QFileInfo fileInfo(originalPoster);
+            savedPosterPath = "assets/" + fileInfo.fileName();
+
+            if (!QFile::exists(savedPosterPath)) {
+                QFile::copy(originalPoster, savedPosterPath);
+            }
+        }
+        newGame.posterPath = savedPosterPath;
+        // ------------------------------------------
+
         games.append(newGame);
+        saveGamesToJson(); // Зберігаємо у файл
+        filterGames();     // Оновлюємо UI з фільтрами
 
-        // Оновлюємо список
-        updateGamesListUI();
-
-        // Виділяємо щойно додану гру
-        ui->gamesList->setCurrentRow(games.size() - 1);
+        ui->gamesList->setCurrentRow(ui->gamesList->count() - 1);
         onGameSelected();
     }
 }
 
-// Оновлення списку ігор у QListWidget
+// Виклик оновлення списку при пошуку/фільтрації
+void MainWindow::filterGames()
+{
+    updateGamesListUI();
+}
+
 void MainWindow::updateGamesListUI()
 {
     if (isAchievementsPage) {
@@ -373,15 +281,30 @@ void MainWindow::updateGamesListUI()
 
     ui->gamesList->clear();
 
+    // Беремо текст із фільтрів
+    QString searchText = ui->searchLineEdit->text().toLower();
+    QString filterGenre = ui->genreComboBox->currentText();
+    QString filterPlatform = ui->platformComboBox->currentText();
+
+    int displayCount = 0;
+
     for (int i = 0; i < games.size(); ++i) {
         const Game &g = games[i];
+
+        // --- ФІЛЬТРАЦІЯ ---
+        if (!searchText.isEmpty() && !g.title.toLower().contains(searchText)) continue;
+        if (filterGenre != "Жанр" && g.genre != filterGenre) continue;
+        if (filterPlatform != "Платформа" && g.platform != filterPlatform) continue;
+
+        displayCount++;
+
         const int progress = (g.totalAchievements > 0)
                                  ? qBound(0, (g.openedAchievements * 100) / g.totalAchievements, 100)
                                  : 0;
 
         auto *item = new QListWidgetItem();
         item->setSizeHint(QSize(0, 64));
-        item->setData(Qt::UserRole, i);
+        item->setData(Qt::UserRole, i); // Зберігаємо реальний індекс масиву
         ui->gamesList->addItem(item);
 
         auto *rowFrame = new QFrame;
@@ -398,7 +321,7 @@ void MainWindow::updateGamesListUI()
         rowLayout->setContentsMargins(12, 8, 12, 8);
         rowLayout->setSpacing(10);
 
-        auto *indexLabel = new QLabel(QString("#%1").arg(i + 1));
+        auto *indexLabel = new QLabel(QString("#%1").arg(displayCount));
         indexLabel->setFixedWidth(28);
         indexLabel->setStyleSheet("color: #f5f7fa; font-weight: 700; font-size: 10pt;");
 
@@ -408,11 +331,12 @@ void MainWindow::updateGamesListUI()
         thumbLabel->setStyleSheet("background-color: #0f1319; border-radius: 6px; color: #d7c58a; font-size: 7pt; font-weight: 700;");
 
         QPixmap thumbPixmap;
-        if (!g.posterPath.isEmpty()) {
+        if (!g.posterPath.isEmpty() && QFile::exists(g.posterPath)) {
             thumbPixmap.load(g.posterPath);
         } else {
             thumbPixmap.load(defaultThumbPathForGame(g.title));
         }
+
         if (!thumbPixmap.isNull()) {
             thumbLabel->setText("");
             thumbLabel->setPixmap(makeRoundedThumb(thumbPixmap, thumbLabel->size()));
@@ -443,15 +367,8 @@ void MainWindow::updateGamesListUI()
         rowProgress->setTextVisible(false);
         rowProgress->setFixedSize(118, 8);
         rowProgress->setStyleSheet(
-            "QProgressBar {"
-            "background-color: #38404b;"
-            "border: none;"
-            "border-radius: 4px;"
-            "}"
-            "QProgressBar::chunk {"
-            "background-color: #d32f2f;"
-            "border-radius: 4px;"
-            "}"
+            "QProgressBar { background-color: #38404b; border: none; border-radius: 4px; }"
+            "QProgressBar::chunk { background-color: #d32f2f; border-radius: 4px; }"
             );
 
         auto *fractionLabel = new QLabel(QString("%1/%2").arg(g.openedAchievements).arg(g.totalAchievements));
@@ -471,11 +388,9 @@ void MainWindow::updateGamesListUI()
         ui->gamesList->setItemWidget(item, rowFrame);
     }
 
-    // Оновлюємо лічильник ігор
-    ui->gamesCountLabel->setText(QString::number(games.size()) + " ігор");
+    ui->gamesCountLabel->setText(QString::number(displayCount) + " ігор");
 
-    // Якщо є ігри, вибираємо першу
-    if (games.size() > 0 && ui->gamesList->currentRow() == -1) {
+    if (displayCount > 0 && ui->gamesList->currentRow() == -1) {
         ui->gamesList->setCurrentRow(0);
         onGameSelected();
     }
@@ -483,21 +398,15 @@ void MainWindow::updateGamesListUI()
     updateGameRowsSelection();
 }
 
-// Відкриття вікна досягнень
 void MainWindow::openAchievementsDialog()
 {
     AchievementsDialog dialog(this);
-
-    // Передаємо назву поточної гри
     dialog.loadAchievementsForGame(ui->gameNameLabel->text());
-
     dialog.exec();
 }
 
-// Завантаження локальних досягнень у праву панель
 void MainWindow::loadRecentAchievements(const QString &gameTitle)
 {
-    // Очищення списку
     ui->recentAchievementsList->clear();
 
     QString basePath = QCoreApplication::applicationDirPath();
@@ -518,7 +427,6 @@ void MainWindow::loadRecentAchievements(const QString &gameTitle)
     }
 
     QFile file(filePath);
-
     if (!file.open(QIODevice::ReadOnly)) {
         ui->recentAchievementsList->addItem("Помилка відкриття файлу");
         return;
@@ -541,9 +449,7 @@ void MainWindow::loadRecentAchievements(const QString &gameTitle)
         QString title = obj["title"].toString();
         const QString iconPath = resolveAchievementIconPath(obj["icon"].toString());
         bool unlocked = obj["unlocked"].toBool();
-        if (title.isEmpty()) {
-            title = "Без назви";
-        }
+        if (title.isEmpty()) title = "Без назви";
 
         QWidget *cardWidget = new QWidget;
         cardWidget->setStyleSheet("background: transparent;");
@@ -591,35 +497,35 @@ void MainWindow::loadRecentAchievements(const QString &gameTitle)
     }
 }
 
-// Оновлення правої панелі при виборі гри
 void MainWindow::onGameSelected()
 {
     if (isAchievementsPage) {
         return;
     }
 
-    int index = ui->gamesList->currentRow();
+    QListWidgetItem *item = ui->gamesList->currentItem();
+    if (!item) return;
 
-    // Якщо нічого не вибрано
-    if (index < 0 || index >= games.size())
-        return;
+    // Дістаємо схований реальний індекс (бо список може бути відфільтрований)
+    int realIndex = item->data(Qt::UserRole).toInt();
+    if (realIndex < 0 || realIndex >= games.size()) return;
 
-    // Беремо гру з масиву
-    const Game &game = games[index];
+    const Game &game = games[realIndex];
 
-    // Оновлюємо праву панель
     ui->gameNameLabel->setText(game.title);
     ui->genreInfoLabel->setText("Жанр: " + game.genre);
     ui->hoursInfoLabel->setText("Ігрові години: " + QString::number(game.hours) + " hours");
     ui->totalAchievementsInfoLabel->setText("Усього досягнень: " + QString::number(game.totalAchievements));
+
     const int percent = (game.totalAchievements > 0) ? (game.openedAchievements * 100) / game.totalAchievements : 0;
     ui->openedAchievementsInfoLabel->setText(
         QString("Відкрито: %1  (%2% Complete)").arg(game.openedAchievements).arg(percent)
         );
     ui->platformInfoLabel->setText("Платформа: " + game.platform);
+
     {
         QString coverPath = game.posterPath;
-        if (coverPath.isEmpty()) {
+        if (coverPath.isEmpty() || !QFile::exists(coverPath)) {
             coverPath = defaultCoverPathForGame(game.title);
         }
 
@@ -627,41 +533,29 @@ void MainWindow::onGameSelected()
 
         if (!cover.isNull()) {
             const QSize targetSize = ui->coverLabel->size();
-
-            // Розраховуємо розмір обрізки під формат блоку постера
             const QSize sourceSize = cover.size();
             const double sourceRatio = static_cast<double>(sourceSize.width()) / sourceSize.height();
             const double targetRatio = static_cast<double>(targetSize.width()) / targetSize.height();
 
             QRect cropRect(0, 0, sourceSize.width(), sourceSize.height());
 
-            // Якщо зображення надто широке — ріжемо по боках (по центру)
             if (sourceRatio > targetRatio) {
                 const int cropWidth = static_cast<int>(sourceSize.height() * targetRatio);
                 const int x = (sourceSize.width() - cropWidth) / 2;
                 cropRect = QRect(x, 0, cropWidth, sourceSize.height());
             }
-            // Якщо зображення вертикальне — ріжемо по висоті з пріоритетом верхньої частини
             else if (sourceRatio < targetRatio) {
                 const int cropHeight = static_cast<int>(sourceSize.width() / targetRatio);
-                int y = static_cast<int>(sourceSize.height() * 0.10); // зміщення вгору як у постерах з логотипом зверху
+                int y = static_cast<int>(sourceSize.height() * 0.10);
                 if (y + cropHeight > sourceSize.height()) {
                     y = sourceSize.height() - cropHeight;
                 }
-                if (y < 0) {
-                    y = 0;
-                }
+                if (y < 0) y = 0;
                 cropRect = QRect(0, y, sourceSize.width(), cropHeight);
             }
 
-            const QPixmap cropped = cover.copy(cropRect).scaled(
-                targetSize,
-                Qt::IgnoreAspectRatio,
-                Qt::SmoothTransformation
-                );
+            const QPixmap cropped = cover.copy(cropRect).scaled(targetSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-            // QLabel не кліпить pixmap по border-radius через stylesheet,
-            // тому застосовуємо скруглення безпосередньо до зображення.
             QPixmap rounded(targetSize);
             rounded.fill(Qt::transparent);
 
@@ -679,27 +573,20 @@ void MainWindow::onGameSelected()
             ui->coverLabel->setText(game.title.toUpper());
         }
     }
-    // Рахуємо прогрес
+
     int progress = 0;
     if (game.totalAchievements > 0) {
         progress = (game.openedAchievements * 100) / game.totalAchievements;
-
-        // Захист від неправильних значень
-        if (progress > 100)
-            progress = 100;
+        if (progress > 100) progress = 100;
     }
 
     ui->progressBar->setValue(progress);
-    ui->progressInfoLabel->setText(
-        QString("(%1/%2)").arg(game.openedAchievements).arg(game.totalAchievements)
-        );
-    ui->viewAchievementsButton->setText("Подивитись досягнення");
+    ui->progressInfoLabel->setText(QString("(%1/%2)").arg(game.openedAchievements).arg(game.totalAchievements));
+    ui->viewAchievementsButton->setText("Переглянути досягнення");
 
-    // Завантажуємо останні досягнення
     loadRecentAchievements(game.title);
 }
 
-// Завантаження всіх досягнень з локальних JSON
 void MainWindow::loadAllAchievementsFromJson()
 {
     allAchievements.clear();
@@ -707,32 +594,23 @@ void MainWindow::loadAllAchievementsFromJson()
     QString basePath = QCoreApplication::applicationDirPath() + "/assets/achievements";
     QDir dir(basePath);
 
-    if (!dir.exists()) {
-        return;
-    }
+    if (!dir.exists()) return;
 
     const QStringList files = dir.entryList(QStringList() << "*.json", QDir::Files);
 
     for (const QString &fileName : files) {
         QFile file(dir.filePath(fileName));
-        if (!file.open(QIODevice::ReadOnly)) {
-            continue;
-        }
+        if (!file.open(QIODevice::ReadOnly)) continue;
 
         QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
         file.close();
 
-        if (!doc.isArray()) {
-            continue;
-        }
+        if (!doc.isArray()) continue;
 
         QString gameTitle = fileName;
-        gameTitle.chop(5); // прибираємо .json
+        gameTitle.chop(5);
         gameTitle.replace("_", " ");
-
-        if (!gameTitle.isEmpty()) {
-            gameTitle[0] = gameTitle[0].toUpper();
-        }
+        if (!gameTitle.isEmpty()) gameTitle[0] = gameTitle[0].toUpper();
 
         QJsonArray arr = doc.array();
         for (const auto &value : arr) {
@@ -749,18 +627,13 @@ void MainWindow::loadAllAchievementsFromJson()
     }
 }
 
-// Пошук валідного шляху до іконки досягнення
 QString MainWindow::resolveAchievementIconPath(const QString &rawIconPath) const
 {
-    if (rawIconPath.isEmpty()) {
-        return QString();
-    }
+    if (rawIconPath.isEmpty()) return QString();
 
     const QString basePath = QCoreApplication::applicationDirPath();
     const QString directPath = basePath + "/" + rawIconPath;
-    if (QFile::exists(directPath)) {
-        return directPath;
-    }
+    if (QFile::exists(directPath)) return directPath;
 
     QFileInfo info(rawIconPath);
     const QString fileName = info.fileName();
@@ -769,27 +642,19 @@ QString MainWindow::resolveAchievementIconPath(const QString &rawIconPath) const
     const QString iconsDirPath = basePath + "/assets/achievements/icons/" + parentDir;
     QDir iconsDir(iconsDirPath);
 
-    if (!iconsDir.exists()) {
-        return QString();
-    }
+    if (!iconsDir.exists()) return QString();
 
-    // Якщо ім'я не збігається, підбираємо найближчий файл за частиною назви
     const QStringList candidates = iconsDir.entryList(QStringList() << "*.png" << "*.jpg" << "*.jpeg" << "*.webp", QDir::Files);
     for (const QString &candidate : candidates) {
-        if (candidate.compare(fileName, Qt::CaseInsensitive) == 0) {
-            return iconsDir.filePath(candidate);
-        }
+        if (candidate.compare(fileName, Qt::CaseInsensitive) == 0) return iconsDir.filePath(candidate);
     }
     for (const QString &candidate : candidates) {
-        if (candidate.toLower().contains(stem)) {
-            return iconsDir.filePath(candidate);
-        }
+        if (candidate.toLower().contains(stem)) return iconsDir.filePath(candidate);
     }
 
     return QString();
 }
 
-// Перемикання на екран бібліотеки
 void MainWindow::showLibraryPage()
 {
     setActiveSidebarButton(ui->libraryButton);
@@ -800,9 +665,7 @@ void MainWindow::showLibraryPage()
     ui->platformComboBox->setVisible(true);
     ui->searchLineEdit->setVisible(true);
     ui->addGameButton->setVisible(false);
-    if (ui->libraryColumnsFrame) {
-        ui->libraryColumnsFrame->setVisible(true);
-    }
+    if (ui->libraryColumnsFrame) ui->libraryColumnsFrame->setVisible(true);
     ui->detailsFrame->setVisible(true);
     ui->settingsFrame->setVisible(false);
 
@@ -811,7 +674,6 @@ void MainWindow::showLibraryPage()
     updateGamesListUI();
 }
 
-// Перемикання на екран усіх досягнень
 void MainWindow::showAchievementsPage()
 {
     setActiveSidebarButton(ui->achievementsButton);
@@ -822,9 +684,7 @@ void MainWindow::showAchievementsPage()
     ui->platformComboBox->setVisible(false);
     ui->searchLineEdit->setVisible(false);
     ui->addGameButton->setVisible(false);
-    if (ui->libraryColumnsFrame) {
-        ui->libraryColumnsFrame->setVisible(false);
-    }
+    if (ui->libraryColumnsFrame) ui->libraryColumnsFrame->setVisible(false);
     ui->detailsFrame->setVisible(false);
     ui->settingsFrame->setVisible(false);
 
@@ -833,11 +693,8 @@ void MainWindow::showAchievementsPage()
     ui->gamesList->addItem("Завантаження досягнень...");
     ui->gamesCountLabel->setText("...");
 
-    // Відкладаємо важку побудову списку, щоб UI встиг перемалювати активну кнопку
     QTimer::singleShot(0, this, [this]() {
-        if (!isAchievementsPage) {
-            return;
-        }
+        if (!isAchievementsPage) return;
 
         loadAllAchievementsFromJson();
 
@@ -848,10 +705,7 @@ void MainWindow::showAchievementsPage()
         for (const AchievementEntry &entry : allAchievements) {
             const QString mark = entry.unlocked ? "✔" : "✖";
             const QString itemText = QString("%1 [%2]\n%3\n%4")
-                                         .arg(mark)
-                                         .arg(entry.gameTitle)
-                                         .arg(entry.title)
-                                         .arg(entry.description);
+                                         .arg(mark).arg(entry.gameTitle).arg(entry.title).arg(entry.description);
 
             auto *item = new QListWidgetItem(itemText);
             item->setSizeHint(QSize(0, 68));
@@ -870,7 +724,6 @@ void MainWindow::showAchievementsPage()
     });
 }
 
-// Перемикання на екран Steam Import
 void MainWindow::showSteamImportPage()
 {
     setActiveSidebarButton(ui->steamImportButton);
@@ -881,9 +734,7 @@ void MainWindow::showSteamImportPage()
     ui->platformComboBox->setVisible(false);
     ui->searchLineEdit->setVisible(false);
     ui->addGameButton->setVisible(false);
-    if (ui->libraryColumnsFrame) {
-        ui->libraryColumnsFrame->setVisible(false);
-    }
+    if (ui->libraryColumnsFrame) ui->libraryColumnsFrame->setVisible(false);
     ui->detailsFrame->setVisible(false);
     ui->settingsFrame->setVisible(false);
 
@@ -893,7 +744,6 @@ void MainWindow::showSteamImportPage()
     ui->gamesCountLabel->setText("1 запис");
 }
 
-// Перемикання на екран налаштувань
 void MainWindow::showSettingsPage()
 {
     setActiveSidebarButton(ui->settingsButton);
@@ -904,9 +754,7 @@ void MainWindow::showSettingsPage()
     ui->platformComboBox->setVisible(false);
     ui->searchLineEdit->setVisible(false);
     ui->addGameButton->setVisible(false);
-    if (ui->libraryColumnsFrame) {
-        ui->libraryColumnsFrame->setVisible(false);
-    }
+    if (ui->libraryColumnsFrame) ui->libraryColumnsFrame->setVisible(false);
     ui->detailsFrame->setVisible(false);
     ui->gamesList->setVisible(false);
     ui->settingsFrame->setVisible(true);
@@ -914,15 +762,8 @@ void MainWindow::showSettingsPage()
     ui->sectionTitleLabel->setText("Налаштування");
 }
 
-void MainWindow::applyDarkTheme()
-{
-    qApp->setStyleSheet(darkStyleSheet);
-}
-
-void MainWindow::applyLightTheme()
-{
-    qApp->setStyleSheet(lightStyleSheet);
-}
+void MainWindow::applyDarkTheme() { qApp->setStyleSheet(darkStyleSheet); }
+void MainWindow::applyLightTheme() { qApp->setStyleSheet(lightStyleSheet); }
 
 void MainWindow::applyUkrainianLanguage()
 {
@@ -937,12 +778,10 @@ void MainWindow::applyUkrainianLanguage()
 
 void MainWindow::applyEnglishLanguage()
 {
-    // Англійська — базова мова без перекладача
     qApp->removeTranslator(&appTranslator);
     ui->retranslateUi(this);
 }
 
-// Оновлення активної кнопки в sidebar
 void MainWindow::setActiveSidebarButton(QPushButton *activeButton)
 {
     ui->libraryButton->setChecked(false);
@@ -950,11 +789,8 @@ void MainWindow::setActiveSidebarButton(QPushButton *activeButton)
     ui->steamImportButton->setChecked(false);
     ui->settingsButton->setChecked(false);
 
-    if (activeButton) {
-        activeButton->setChecked(true);
-    }
+    if (activeButton) activeButton->setChecked(true);
 
-    // Одразу синхронізуємо фоновий колір, щоб не було "залипання" до hover-події
     auto applySidebarColor = [activeButton](QPushButton *button) {
         if (button == activeButton) {
             button->setStyleSheet("background-color: #d32f2f;");
@@ -969,38 +805,74 @@ void MainWindow::setActiveSidebarButton(QPushButton *activeButton)
     applySidebarColor(ui->settingsButton);
 }
 
-// Оновлення візуального стану рядків у списку ігор
 void MainWindow::updateGameRowsSelection()
 {
-    if (isAchievementsPage) {
-        return;
-    }
+    if (isAchievementsPage) return;
 
     const int selectedRow = ui->gamesList->currentRow();
     for (int row = 0; row < ui->gamesList->count(); ++row) {
         QListWidgetItem *item = ui->gamesList->item(row);
         QWidget *widget = ui->gamesList->itemWidget(item);
         auto *frame = qobject_cast<QFrame *>(widget);
-        if (!frame) {
-            continue;
-        }
+        if (!frame) continue;
 
         if (row == selectedRow) {
-            frame->setStyleSheet(
-                "QFrame#gameRowFrame {"
-                "background-color: #141a22;"
-                "border: 1px solid #d32f2f;"
-                "border-radius: 12px;"
-                "}"
-                );
+            frame->setStyleSheet("QFrame#gameRowFrame { background-color: #141a22; border: 1px solid #d32f2f; border-radius: 12px; }");
         } else {
-            frame->setStyleSheet(
-                "QFrame#gameRowFrame {"
-                "background-color: #141a22;"
-                "border: 1px solid transparent;"
-                "border-radius: 12px;"
-                "}"
-                );
+            frame->setStyleSheet("QFrame#gameRowFrame { background-color: #141a22; border: 1px solid transparent; border-radius: 12px; }");
         }
+    }
+}
+
+// ===== РОБОТА З JSON =====
+
+void MainWindow::saveGamesToJson()
+{
+    QJsonArray jsonArray;
+    for (const Game& game : games) {
+        QJsonObject jsonObj;
+        jsonObj["title"] = game.title;
+        jsonObj["genre"] = game.genre;
+        jsonObj["platform"] = game.platform;
+        jsonObj["hours"] = game.hours;
+        jsonObj["totalAchievements"] = game.totalAchievements;
+        jsonObj["openedAchievements"] = game.openedAchievements;
+        jsonObj["posterPath"] = game.posterPath;
+        jsonArray.append(jsonObj);
+    }
+
+    QJsonDocument doc(jsonArray);
+    QFile file("games.json");
+    if (file.open(QIODevice::WriteOnly)) {
+        file.write(doc.toJson());
+        file.close();
+    }
+}
+
+void MainWindow::loadGamesFromJson()
+{
+    games.clear();
+    QFile file("games.json");
+
+    if (!file.open(QIODevice::ReadOnly)) return;
+
+    QByteArray data = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonArray jsonArray = doc.array();
+
+    for (int i = 0; i < jsonArray.size(); ++i) {
+        QJsonObject jsonObj = jsonArray[i].toObject();
+        Game g;
+        g.title = jsonObj["title"].toString();
+        g.genre = jsonObj["genre"].toString();
+        g.platform = jsonObj["platform"].toString();
+        g.hours = jsonObj["hours"].toInt();
+        g.totalAchievements = jsonObj["totalAchievements"].toInt();
+        g.openedAchievements = jsonObj["openedAchievements"].toInt();
+        g.posterPath = jsonObj["posterPath"].toString();
+
+        games.append(g);
     }
 }
