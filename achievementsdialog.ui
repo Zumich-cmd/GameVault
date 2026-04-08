@@ -48,12 +48,10 @@ QListWidget {
 }
 
 QListWidget::item {
-    background-color: #141a22;
-    border: 1px solid transparent;
-    border-radius: 10px;
-    padding: 12px;
-    margin: 0px 8px 8px 0px;
-    color: #e6e6e6;
+    background: transparent;
+    border: none;
+    padding: 0px;
+    margin: 6px 0px;
 }
 
 QListWidget::item:selected {
@@ -160,11 +158,11 @@ QScrollBar::sub-page:vertical {
       </item>
       <item>
        <widget class="QListWidget" name="achievementsList">
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-        </property>
         <property name="verticalScrollBarPolicy">
          <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
         </property>
        </widget>
       </item>

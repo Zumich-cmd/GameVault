@@ -17,7 +17,6 @@
    <string notr="true">QMainWindow, QWidget {
     background-color: #0b0f14;
     color: #e6e6e6;
-    font-family: &quot;Segoe UI&quot;;
 }
 
 /* Базовый текст */
@@ -420,7 +419,7 @@ QListWidget#gamesList::item:hover {
         <widget class="QLabel" name="logoLabel">
          <property name="font">
           <font>
-           <family>Segoe UI</family>
+           <family>Jura</family>
            <pointsize>18</pointsize>
            <bold>false</bold>
           </font>
@@ -492,11 +491,23 @@ QListWidget#gamesList::item:hover {
        </item>
        <item>
         <widget class="QPushButton" name="settingsButton">
+         <property name="minimumSize">
+          <size>
+           <width>33</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="font">
           <font>
            <family>Segoe UI</family>
            <pointsize>10</pointsize>
-           <bold>true</bold>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
@@ -522,6 +533,12 @@ QListWidget#gamesList::item:hover {
        </item>
        <item>
         <widget class="QPushButton" name="bottomAddGameButton">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="focusPolicy">
           <enum>Qt::FocusPolicy::NoFocus</enum>
          </property>
@@ -749,7 +766,7 @@ QListWidget#gamesList::item:hover {
            </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>38</width>
+             <width>99</width>
              <height>20</height>
             </size>
            </property>
@@ -759,7 +776,7 @@ QListWidget#gamesList::item:hover {
           <widget class="QLabel" name="columnsNameLabel">
            <property name="minimumSize">
             <size>
-             <width>132</width>
+             <width>130</width>
              <height>0</height>
             </size>
            </property>
@@ -767,6 +784,19 @@ QListWidget#gamesList::item:hover {
             <string>Назва</string>
            </property>
           </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>85</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
          </item>
          <item>
           <widget class="QLabel" name="columnsGenreLabel">
@@ -825,14 +855,14 @@ QListWidget#gamesList::item:hover {
       </item>
       <item>
        <widget class="QListWidget" name="gamesList">
-        <property name="horizontalScrollBarPolicy">
-         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::NoFocus</enum>
         </property>
         <property name="verticalScrollBarPolicy">
          <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
         </property>
-        <property name="focusPolicy">
-         <enum>Qt::FocusPolicy::NoFocus</enum>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
         </property>
        </widget>
       </item>
@@ -873,6 +903,9 @@ QListWidget#gamesList::item:hover {
 }</string>
         </property>
         <layout class="QVBoxLayout" name="settingsLayout">
+         <property name="spacing">
+          <number>10</number>
+         </property>
          <property name="leftMargin">
           <number>14</number>
          </property>
@@ -884,9 +917,6 @@ QListWidget#gamesList::item:hover {
          </property>
          <property name="bottomMargin">
           <number>14</number>
-         </property>
-         <property name="spacing">
-          <number>10</number>
          </property>
          <item>
           <widget class="QLabel" name="settingsTitleLabel">
@@ -1037,6 +1067,12 @@ QListWidget#gamesList::item:hover {
        </property>
        <item>
         <widget class="QLabel" name="detailsHeaderLabel">
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Деталі гри</string>
          </property>
@@ -1083,11 +1119,11 @@ QListWidget#gamesList::item:hover {
               <height>120</height>
              </size>
             </property>
-            <property name="alignment">
-             <set>Qt::AlignmentFlag::AlignCenter</set>
-            </property>
             <property name="text">
              <string>ELDEN RING</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -1096,6 +1132,13 @@ QListWidget#gamesList::item:hover {
        </item>
        <item>
         <widget class="QLabel" name="gameNameLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>18</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Elden Ring</string>
          </property>
@@ -1103,6 +1146,13 @@ QListWidget#gamesList::item:hover {
        </item>
        <item>
         <widget class="QLabel" name="genreInfoLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>-1</pointsize>
+           <fontweight>DemiBold</fontweight>
+          </font>
+         </property>
          <property name="text">
           <string>Жанр: RPG</string>
          </property>
@@ -1110,6 +1160,13 @@ QListWidget#gamesList::item:hover {
        </item>
        <item>
         <widget class="QLabel" name="hoursInfoLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Ігрові години: 145 hours</string>
          </property>
@@ -1117,6 +1174,13 @@ QListWidget#gamesList::item:hover {
        </item>
        <item>
         <widget class="QLabel" name="totalAchievementsInfoLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Усього досягнень: 50</string>
          </property>
@@ -1124,6 +1188,13 @@ QListWidget#gamesList::item:hover {
        </item>
        <item>
         <widget class="QLabel" name="openedAchievementsInfoLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
           <string>Відкрито: 39  (85% Complete)</string>
          </property>
@@ -1140,6 +1211,11 @@ QListWidget#gamesList::item:hover {
          </item>
          <item>
           <widget class="QLabel" name="progressInfoLabel">
+           <property name="font">
+            <font>
+             <family>Roboto</family>
+            </font>
+           </property>
            <property name="text">
             <string>(39/50)</string>
            </property>
@@ -1149,6 +1225,13 @@ QListWidget#gamesList::item:hover {
        </item>
        <item>
         <widget class="QLabel" name="mutedLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>-1</pointsize>
+           <fontweight>ExtraBold</fontweight>
+          </font>
+         </property>
          <property name="text">
           <string>Останні досягнення</string>
          </property>
@@ -1162,11 +1245,11 @@ QListWidget#gamesList::item:hover {
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
-         </property>
          <property name="verticalScrollBarPolicy">
           <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
          </property>
         </widget>
        </item>
@@ -1184,6 +1267,13 @@ QListWidget#gamesList::item:hover {
            <width>0</width>
            <height>42</height>
           </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>11</pointsize>
+           <fontweight>ExtraBold</fontweight>
+          </font>
          </property>
          <property name="text">
           <string>Подивитись досягнення</string>

@@ -120,6 +120,13 @@ QPushButton#saveGameButton:hover {
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Ігрові години</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QSpinBox" name="hoursSpinBox">
      <property name="maximum">
       <number>9999</number>
@@ -127,9 +134,23 @@ QPushButton#saveGameButton:hover {
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Всього досягнень</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QSpinBox" name="totalAchievementsSpinBox">
      <property name="maximum">
       <number>1000</number>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Відкрито досягнень</string>
      </property>
     </widget>
    </item>
