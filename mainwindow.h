@@ -2,9 +2,18 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QVector> // для зберігання списку ігор
+#include <QVector>
+#include <QTranslator>
+#include <QJsonDocument>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QFile>
+#include <QDir>
+#include <QFileInfo>
 
-// структура для зберігання даних нашої проги
+class QPushButton;
+
+// Структура для зберігання даних гри
 struct Game {
     QString title;
     QString genre;
@@ -12,6 +21,16 @@ struct Game {
     int hours;
     int totalAchievements;
     int openedAchievements;
+    QString posterPath;
+};
+
+// Структура для зберігання даних досягнення
+struct AchievementEntry {
+    QString gameTitle;
+    QString title;
+    QString description;
+    QString iconPath;
+    bool unlocked;
 };
 
 QT_BEGIN_NAMESPACE
@@ -29,14 +48,43 @@ public:
     ~MainWindow();
 
 private slots:
-    void onGameSelected(); // обробка вибору гри
-    void onAddGameClicked(); // обробка натискання кнопки "Додати гру"
+    void onGameSelected();
+    void onAddGameClicked();
+    void openAchievementsDialog();
+    void showLibraryPage();
+    void showAchievementsPage();
+    void showSteamImportPage();
+    void showSettingsPage();
+    void applyDarkTheme();
+    void applyLightTheme();
+    void applyUkrainianLanguage();
+    void applyEnglishLanguage();
+
+    // Новий слот для пошуку та фільтрів
+    void filterGames();
 
 private:
     Ui::MainWindow *ui;
+    QTranslator appTranslator;
+    QString darkStyleSheet;
+    QString lightStyleSheet;
 
-    QVector<Game> games; // наш масив ігор
-    void updateGamesListUI(); // метод для оновлення списку на екрані
+    // Масив ігор
+    QVector<Game> games;
+    QVector<AchievementEntry> allAchievements;
+
+    bool isAchievementsPage = false;
+
+    void updateGamesListUI();
+    void loadRecentAchievements(const QString &gameTitle);
+    void loadAllAchievementsFromJson();
+    QString resolveAchievementIconPath(const QString &rawIconPath) const;
+    void setActiveSidebarButton(QPushButton *activeButton);
+    void updateGameRowsSelection();
+
+    // Нові методи для роботи з JSON
+    void saveGamesToJson();
+    void loadGamesFromJson();
 };
 
 #endif // MAINWINDOW_H
