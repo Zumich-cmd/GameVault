@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Shardbearer Godrick",
+    "description": "Defeated Shardbearer Godrick.",
+    "icon": "assets/achievements/icons/elden_ring/godrick.png",
+    "unlocked": true
+  },
+  {
+    "title": "Rennala, Queen of the Full Moon",
+    "description": "Defeated Rennala.",
+    "icon": "assets/achievements/icons/elden_ring/rennala.png",
+    "unlocked": true
+  },
+  {
+    "title": "Starscourge Radahn",
+    "description": "Defeated Radahn.",
+    "icon": "assets/achievements/icons/elden_ring/radahn.png",
+    "unlocked": false
+  }
+]

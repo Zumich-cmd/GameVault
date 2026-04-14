@@ -3,17 +3,20 @@
 
 #include <QMainWindow>
 #include <QVector>
-#include <QTranslator>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QFile>
 #include <QDir>
 #include <QFileInfo>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QUrl>
 
+class QListWidgetItem;
 class QPushButton;
 
-// Структура для зберігання даних гри
 struct Game {
     QString title;
     QString genre;
@@ -24,7 +27,6 @@ struct Game {
     QString posterPath;
 };
 
-// Структура для зберігання даних досягнення
 struct AchievementEntry {
     QString gameTitle;
     QString title;
@@ -49,6 +51,7 @@ public:
 
 private slots:
     void onGameSelected();
+    void onGameDoubleClicked(QListWidgetItem *item); // Редагування гри
     void onAddGameClicked();
     void openAchievementsDialog();
     void showLibraryPage();
@@ -59,21 +62,21 @@ private slots:
     void applyLightTheme();
     void applyUkrainianLanguage();
     void applyEnglishLanguage();
-
-    // Новий слот для пошуку та фільтрів
     void filterGames();
+    void onNetworkReplyFinished(QNetworkReply *reply); // Загальний обробник API
 
 private:
     Ui::MainWindow *ui;
-    QTranslator appTranslator;
     QString darkStyleSheet;
     QString lightStyleSheet;
 
-    // Масив ігор
     QVector<Game> games;
     QVector<AchievementEntry> allAchievements;
-
     bool isAchievementsPage = false;
+
+    QNetworkAccessManager *networkManager;
+    QString currentSteamId;   // Зберігаємо ID під час імпорту
+    QString currentSteamName; // Зберігаємо нік під час імпорту
 
     void updateGamesListUI();
     void loadRecentAchievements(const QString &gameTitle);
@@ -82,7 +85,6 @@ private:
     void setActiveSidebarButton(QPushButton *activeButton);
     void updateGameRowsSelection();
 
-    // Нові методи для роботи з JSON
     void saveGamesToJson();
     void loadGamesFromJson();
 };

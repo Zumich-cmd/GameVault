@@ -1,79 +1,75 @@
 #include "addgamedialog.h"
 #include "ui_addgamedialog.h"
-
-// Для відображення повідомлень про помилки
+#include "buttonhoveranimator.h"
 #include <QMessageBox>
+#include <QFileDialog>
 
-// Конструктор діалогу
 AddGameDialog::AddGameDialog(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::AddGameDialog)
 {
-    // Ініціалізація UI
     ui->setupUi(this);
 
-    // Заповнення списку жанрів
-    ui->genreComboBox->addItems({"RPG", "Action"});
+    // Поле шляху до постера тільки для читання
+    ui->posterPathLineEdit->setReadOnly(true);
+    ui->genreComboBox->addItems({"RPG", "Action", "Roguelike", "Metroidvania", "Steam Import"});
+    ui->platformComboBox->addItems({"Steam", "Epic Games", "Other"});
 
-    // Заповнення списку платформ
-    ui->platformComboBox->addItems({"Steam", "Epic"});
+    // Обробка кнопки вибору постера
+    connect(ui->choosePosterButton, &QPushButton::clicked, this, [this]() {
+        QString fileName = QFileDialog::getOpenFileName(this, "Обрати постер", "", "Images (*.png *.jpg *.jpeg *.webp)");
+        if (!fileName.isEmpty()) {
+            ui->posterPathLineEdit->setText(fileName);
+        }
+    });
 
-    // Обробка кнопки "Скасувати" (закриття вікна)
-    connect(ui->cancelButton, &QPushButton::clicked,
-            this, &QDialog::reject);
+    connect(ui->cancelButton, &QPushButton::clicked, this, &QDialog::reject);
 
-    // Обробка кнопки "Зберегти"
+    // Обробка кнопки збереження
     connect(ui->saveGameButton, &QPushButton::clicked, this, [this]() {
-
-        // Перевірка: чи введена назва гри
         if (ui->titleLineEdit->text().isEmpty()) {
-
-            // Вивід попередження
             QMessageBox::warning(this, "Помилка", "Введіть назву гри");
-
-            // Зупинка виконання
             return;
         }
-
-        // Закриття діалогу з підтвердженням
+        if (ui->openedAchievementsSpinBox->value() > ui->totalAchievementsSpinBox->value()) {
+            QMessageBox::warning(this, "Помилка", "Відкритих досягнень не може бути більше, ніж загальна кількість");
+            return;
+        }
         accept();
     });
+
+    ui->choosePosterButton->setCursor(Qt::PointingHandCursor);
+    ui->saveGameButton->setCursor(Qt::PointingHandCursor);
+    ui->cancelButton->setCursor(Qt::PointingHandCursor);
+
+    // Анімації кнопок
+    installHoverAnimation(ui->choosePosterButton, ButtonHoverPalette{QColor("#21262d"), QColor("#30363d"), QColor("#1b2026"), QColor(), QColor(), false}, this);
+    installHoverAnimation(ui->saveGameButton, ButtonHoverPalette{QColor("#c62828"), QColor("#e53935"), QColor("#a22222"), QColor(), QColor(), false}, this);
+    installHoverAnimation(ui->cancelButton, ButtonHoverPalette{QColor("#21262d"), QColor("#30363d"), QColor("#1b2026"), QColor(), QColor(), false}, this);
 }
 
-// Деструктор (звільнення пам'яті)
 AddGameDialog::~AddGameDialog()
 {
     delete ui;
 }
 
-// ===== ГЕТЕРИ =====
-
-// Отримання назви гри
-QString AddGameDialog::getTitle() const {
-    return ui->titleLineEdit->text();
+// Заповнюємо форму даними (для редагування)
+void AddGameDialog::setGameData(const QString& title, const QString& genre, const QString& platform,
+                                int hours, int totalAchiev, int openedAchiev, const QString& posterPath)
+{
+    ui->titleLineEdit->setText(title);
+    ui->genreComboBox->setCurrentText(genre);
+    ui->platformComboBox->setCurrentText(platform);
+    ui->hoursSpinBox->setValue(hours);
+    ui->totalAchievementsSpinBox->setValue(totalAchiev);
+    ui->openedAchievementsSpinBox->setValue(openedAchiev);
+    ui->posterPathLineEdit->setText(posterPath);
 }
 
-// Отримання жанру
-QString AddGameDialog::getGenre() const {
-    return ui->genreComboBox->currentText();
-}
-
-// Отримання платформи
-QString AddGameDialog::getPlatform() const {
-    return ui->platformComboBox->currentText();
-}
-
-// Отримання кількості годин
-int AddGameDialog::getHours() const {
-    return ui->hoursSpinBox->value();
-}
-
-// Отримання загальної кількості досягнень
-int AddGameDialog::getTotalAchievements() const {
-    return ui->totalAchievementsSpinBox->value();
-}
-
-// Отримання відкритих досягнень
-int AddGameDialog::getOpenedAchievements() const {
-    return ui->openedAchievementsSpinBox->value();
-}
+QString AddGameDialog::getTitle() const { return ui->titleLineEdit->text(); }
+QString AddGameDialog::getGenre() const { return ui->genreComboBox->currentText(); }
+QString AddGameDialog::getPlatform() const { return ui->platformComboBox->currentText(); }
+int AddGameDialog::getHours() const { return ui->hoursSpinBox->value(); }
+int AddGameDialog::getTotalAchievements() const { return ui->totalAchievementsSpinBox->value(); }
+int AddGameDialog::getOpenedAchievements() const { return ui->openedAchievementsSpinBox->value(); }
+QString AddGameDialog::getPosterPath() const { return ui->posterPathLineEdit->text(); }

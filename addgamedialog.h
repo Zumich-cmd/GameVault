@@ -12,32 +12,22 @@ class AddGameDialog : public QDialog
     Q_OBJECT
 
 public:
-    // Конструктор (створення вікна)
     explicit AddGameDialog(QWidget *parent = nullptr);
-
-    // Деструктор (очищення пам'яті)
     ~AddGameDialog();
 
-    // Отримати назву гри
     QString getTitle() const;
-
-    // Отримати жанр гри
     QString getGenre() const;
-
-    // Отримати платформу
     QString getPlatform() const;
-
-    // Отримати кількість годин
     int getHours() const;
-
-    // Отримати загальну кількість досягнень
     int getTotalAchievements() const;
-
-    // Отримати відкриті досягнення
     int getOpenedAchievements() const;
+    QString getPosterPath() const;
+
+    // НОВИЙ МЕТОД: Завантаження даних гри у форму для редагування
+    void setGameData(const QString& title, const QString& genre, const QString& platform,
+                     int hours, int totalAchiev, int openedAchiev, const QString& posterPath);
 
 private:
-    // Вказівник на UI форму (елементи з Designer)
     Ui::AddGameDialog *ui;
 };
 
