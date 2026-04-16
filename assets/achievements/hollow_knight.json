@@ -1,0 +1,14 @@
+[
+  {
+    "title": "False Knight",
+    "description": "Defeat False Knight.",
+    "icon": "assets/achievements/icons/hollow_knight/false.png",
+    "unlocked": true
+  },
+  {
+    "title": "Dream Nail",
+    "description": "Get Dream Nail.",
+    "icon": "assets/achievements/icons/hollow_knight/dream.png",
+    "unlocked": true
+  }
+]

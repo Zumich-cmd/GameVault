@@ -1,0 +1,14 @@
+[
+  {
+    "title": "Blood Bound",
+    "description": "Fulfill prophecy.",
+    "icon": "assets/achievements/icons/hades/blood.png",
+    "unlocked": true
+  },
+  {
+    "title": "Friends Forever",
+    "description": "Max keepsakes.",
+    "icon": "assets/achievements/icons/hades/friends.png",
+    "unlocked": false
+  }
+]
