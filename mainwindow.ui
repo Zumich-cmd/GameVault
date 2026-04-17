@@ -1,0 +1,1302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1220</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>GameVault</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow, QWidget {
+    background-color: #0b0f14;
+    color: #e6e6e6;
+}
+
+/* Базовый текст */
+QLabel {
+    background: transparent;
+    border: none;
+}
+
+/* ===== SIDEBAR ===== */
+#sidebarFrame {
+    background-color: #11161d;
+    border-radius: 14px;
+}
+
+#sidebarFrame QPushButton {
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: 10px;
+    color: #c9d1d9;
+    font-size: 10pt;
+}
+
+#sidebarFrame QPushButton:hover {
+    background-color: #252d39;
+}
+
+#sidebarFrame QPushButton:pressed {
+    background-color: #1b222d;
+}
+
+#sidebarFrame QPushButton:checked {
+    background-color: #d32f2f;
+    color: white;
+}
+
+/* Нижняя кнопка */
+#sidebarFrame QPushButton#bottomAddGameButton {
+    background-color: #942B2B;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+#sidebarFrame QPushButton#bottomAddGameButton:hover {
+    background-color: #b33636;
+}
+
+#sidebarFrame QPushButton#bottomAddGameButton:pressed {
+    background-color: #7a2323;
+}
+
+/* ===== HEADER / FILTERS ===== */
+QLineEdit, QComboBox {
+    background-color: #141a22;
+    border: 1px solid #2c3440;
+    border-radius: 10px;
+    padding: 6px;
+    color: #e6e6e6;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 18px;
+}
+
+QComboBox::down-arrow {
+    image: none;
+    border: none;
+}
+
+/* ===== BUTTONS ===== */
+QPushButton {
+    background-color: #1c222b;
+    border: none;
+    border-radius: 10px;
+    padding: 6px 12px;
+    color: white;
+}
+
+QPushButton:hover {
+    background-color: #323b49;
+}
+
+QPushButton:pressed {
+    background-color: #262d38;
+}
+
+QPushButton#addGameButton {
+    background-color: #d32f2f;
+    color: white;
+    font-weight: bold;
+}
+
+QPushButton#addGameButton:hover {
+    background-color: #ff3d3d;
+}
+
+QPushButton#viewAchievementsButton {
+    background-color: #9f2727;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 11pt;
+    font-weight: 800;
+    color: white;
+}
+
+QPushButton#viewAchievementsButton:hover {
+    background-color: #c13333;
+}
+
+QPushButton#viewAchievementsButton:pressed {
+    background-color: #7e1f1f;
+}
+
+/* ===== LISTS ===== */
+QListWidget {
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+QListWidget::item {
+    background-color: #141a22;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin: 6px 0px;
+    color: #e6e6e6;
+    font-family: &quot;Consolas&quot;;
+}
+
+QListWidget::item:selected {
+    background-color: #141a22;
+    border: 2px solid #ff3d3d;
+    outline: none;
+}
+
+QListWidget::item:hover {
+    background-color: #171f29;
+}
+
+/* Список останніх досягнень */
+QListWidget#recentAchievementsList {
+    background: transparent;
+    border: none;
+    padding-right: 12px;
+    outline: none;
+}
+
+QListWidget#recentAchievementsList::item {
+    background: transparent;
+    border: none;
+    border-radius: 0px;
+    padding: 0px;
+    margin: 0px 0px 2px 0px;
+    color: #e6e6e6;
+    font-family: &quot;Segoe UI&quot;;
+}
+
+QListWidget#recentAchievementsList::item:selected {
+    background: transparent;
+    border: none;
+}
+
+QListWidget#recentAchievementsList QScrollBar:vertical {
+    background: #0f141c;
+    width: 6px;
+    margin: 6px 2px 6px 0px;
+    border-radius: 3px;
+}
+
+QListWidget#recentAchievementsList QScrollBar::handle:vertical {
+    background: #344053;
+    border-radius: 3px;
+    min-height: 28px;
+}
+
+QListWidget#recentAchievementsList QScrollBar::handle:vertical:hover {
+    background: #46556b;
+}
+
+QListWidget#recentAchievementsList QScrollBar::handle:vertical:pressed {
+    background: #ff3d3d;
+}
+
+QListWidget#recentAchievementsList QScrollBar::add-line:vertical,
+QListWidget#recentAchievementsList QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QListWidget#recentAchievementsList QScrollBar::add-page:vertical,
+QListWidget#recentAchievementsList QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+/* ===== DETAILS PANEL ===== */
+#detailsFrame {
+    background-color: #11161d;
+    border-radius: 14px;
+}
+
+#detailsFrame QLabel {
+    background: transparent;
+    border: none;
+}
+
+#coverFrame {
+    background: transparent;
+}
+
+#coverLabel {
+    background-color: #0a0f14;
+    border-radius: 12px;
+    padding: 0px;
+    font-size: 18pt;
+    font-weight: bold;
+    color: #d7c58a;
+}
+
+#gameNameLabel {
+    font-size: 18pt;
+    font-weight: bold;
+    color: white;
+}
+
+#genreInfoLabel {
+    color: #7f8b9a;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#hoursInfoLabel,
+#totalAchievementsInfoLabel,
+#openedAchievementsInfoLabel {
+    color: #f2f4f8;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#mutedLabel {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+#platformInfoLabel {
+    color: #9aa4b2;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* ===== PROGRESS ===== */
+QProgressBar {
+    background-color: #2a313d;
+    border: none;
+    border-radius: 6px;
+    text-align: center;
+    color: white;
+}
+
+QProgressBar::chunk {
+    background-color: #ff3d3d;
+    border-radius: 6px;
+}
+
+/* ===== SCROLLBAR ===== */
+QScrollBar:vertical {
+    background: transparent;
+    width: 6px;
+    margin: 8px 2px 8px 0px;
+    border-radius: 3px;
+}
+
+QScrollBar::handle:vertical {
+    background: #2a313d;
+    border-radius: 3px;
+    min-height: 30px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #3a4352;
+}
+
+QScrollBar::handle:vertical:pressed {
+    background: #ff3d3d;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+QListWidget#gamesList QScrollBar:vertical {
+    background: #0f141c;
+    width: 8px;
+    margin: 6px 2px 6px 0px;
+    border-radius: 4px;
+}
+
+QListWidget#gamesList QScrollBar::handle:vertical {
+    background: #3a4352;
+    border-radius: 4px;
+    min-height: 40px;
+}
+
+QListWidget#gamesList QScrollBar::handle:vertical:hover {
+    background: #4a5668;
+}
+
+QListWidget#gamesList QScrollBar::handle:vertical:pressed {
+    background: #ff3d3d;
+}
+
+QListWidget#gamesList QScrollBar::add-line:vertical,
+QListWidget#gamesList QScrollBar::sub-line:vertical {
+    height: 0px;
+}
+
+QListWidget#gamesList QScrollBar::add-page:vertical,
+QListWidget#gamesList QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+QListWidget#gamesList QScrollBar:horizontal {
+    height: 0px;
+}
+
+QListWidget#gamesList::item:selected {
+    background: transparent;
+    border: none;
+}
+
+QListWidget#gamesList::item {
+    padding: 0px;
+    margin: 6px 0px;
+    background: transparent;
+    border: none;
+}
+
+QListWidget#gamesList::item:hover {
+    background: transparent;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <property name="spacing">
+     <number>14</number>
+    </property>
+    <property name="leftMargin">
+     <number>12</number>
+    </property>
+    <property name="topMargin">
+     <number>12</number>
+    </property>
+    <property name="rightMargin">
+     <number>12</number>
+    </property>
+    <property name="bottomMargin">
+     <number>12</number>
+    </property>
+    <item>
+     <widget class="QFrame" name="sidebarFrame">
+      <property name="minimumSize">
+       <size>
+        <width>160</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>318</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>8</number>
+       </property>
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
+       <property name="topMargin">
+        <number>12</number>
+       </property>
+       <property name="rightMargin">
+        <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>12</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="logoLabel">
+         <property name="font">
+          <font>
+           <family>Jura</family>
+           <pointsize>18</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>GameVault</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="libraryButton">
+         <property name="font">
+          <font>
+           <family>Segoe UI</family>
+           <pointsize>10</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>💾 Бібліотека</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="achievementsButton">
+         <property name="font">
+          <font>
+           <family>Segoe UI</family>
+           <pointsize>10</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>🏅 Досягнення</string>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="steamImportButton">
+         <property name="font">
+          <font>
+           <family>Segoe UI</family>
+           <pointsize>10</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>🤖 Steam Import</string>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="settingsButton">
+         <property name="minimumSize">
+          <size>
+           <width>33</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Segoe UI</family>
+           <pointsize>10</pointsize>
+           <bold>false</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>⚙ Налаштування</string>
+         </property>
+         <property name="flat">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="bottomAddGameButton">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::FocusPolicy::NoFocus</enum>
+         </property>
+         <property name="layoutDirection">
+          <enum>Qt::LayoutDirection::RightToLeft</enum>
+         </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="inputMethodHints">
+          <set>Qt::InputMethodHint::ImhNone</set>
+         </property>
+         <property name="text">
+          <string>+ Додати гру</string>
+         </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>10</number>
+      </property>
+      <item>
+       <widget class="QFrame" name="topBarFrame">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <property name="spacing">
+          <number>8</number>
+         </property>
+         <property name="leftMargin">
+          <number>0</number>
+         </property>
+         <property name="topMargin">
+          <number>0</number>
+         </property>
+         <property name="rightMargin">
+          <number>0</number>
+         </property>
+         <property name="bottomMargin">
+          <number>0</number>
+         </property>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <property name="spacing">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="sectionTitleLabel">
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>20</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="text">
+              <string>Моя ігрова бібліотека</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="font">
+              <font>
+               <family>Segoe UI</family>
+               <pointsize>16</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QComboBox" name="genreComboBox">
+             <item>
+              <property name="text">
+               <string>Жанр</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="statusComboBox">
+             <property name="frame">
+              <bool>true</bool>
+             </property>
+             <item>
+              <property name="text">
+               <string>Статус</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="platformComboBox">
+             <item>
+              <property name="text">
+               <string>Платформа</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="searchLineEdit">
+             <property name="text">
+              <string>Пошук...</string>
+             </property>
+             <property name="placeholderText">
+              <string>Поиск игры...</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="addGameButton">
+             <property name="text">
+              <string>+ Додати</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QLabel" name="gamesCountLabel">
+           <property name="font">
+            <font>
+             <family>Segoe UI</family>
+             <pointsize>12</pointsize>
+             <fontweight>Light</fontweight>
+            </font>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">color: #9D9D9D;</string>
+           </property>
+           <property name="text">
+            <string>0 ігор</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="libraryColumnsFrame">
+        <property name="styleSheet">
+         <string notr="true">#libraryColumnsFrame {
+    background-color: #141a22;
+    border-radius: 10px;
+    border: 1px solid #1c2532;
+}
+
+#libraryColumnsFrame QLabel {
+    color: #f1f4f9;
+    font-size: 11pt;
+    font-weight: 700;
+}
+
+#libraryAddButton {
+    background-color: #d32f2f;
+    border-radius: 9px;
+    font-weight: 700;
+    color: white;
+    padding: 6px 14px;
+}
+
+#libraryAddButton:hover {
+    background-color: #ff3d3d;
+}
+
+#libraryAddButton:pressed {
+    background-color: #b92a2a;
+}</string>
+        </property>
+        <layout class="QHBoxLayout" name="libraryColumnsLayout">
+         <property name="spacing">
+          <number>12</number>
+         </property>
+         <property name="leftMargin">
+          <number>12</number>
+         </property>
+         <property name="topMargin">
+          <number>8</number>
+         </property>
+         <property name="rightMargin">
+          <number>12</number>
+         </property>
+         <property name="bottomMargin">
+          <number>8</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="sortGlyphLabel">
+           <property name="minimumSize">
+            <size>
+             <width>24</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>☷</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="columnsSpacer0">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>99</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="columnsNameLabel">
+           <property name="minimumSize">
+            <size>
+             <width>130</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Назва</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>85</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="columnsGenreLabel">
+           <property name="minimumSize">
+            <size>
+             <width>92</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Жанр</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="columnsHoursLabel">
+           <property name="minimumSize">
+            <size>
+             <width>124</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Ігрові години</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="columnsSpacer1">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="libraryAddButton">
+           <property name="minimumSize">
+            <size>
+             <width>150</width>
+             <height>34</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>+ Додати гру</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QListWidget" name="gamesList">
+        <property name="focusPolicy">
+         <enum>Qt::FocusPolicy::NoFocus</enum>
+        </property>
+        <property name="verticalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
+        </property>
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="settingsFrame">
+        <property name="visible">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">#settingsFrame {
+    background-color: #11161d;
+    border-radius: 14px;
+}
+
+#settingsFrame QLabel#settingsTitleLabel {
+    font-size: 18pt;
+    font-weight: 800;
+    color: white;
+}
+
+#settingsFrame QLabel.sectionLabel {
+    color: #9aa4b2;
+    font-size: 11pt;
+    font-weight: 700;
+}
+
+#settingsFrame QPushButton.optionButton {
+    background-color: #141a22;
+    border: 1px solid #2c3440;
+    border-radius: 10px;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 700;
+}
+
+#settingsFrame QPushButton.optionButton:checked {
+    border: 1px solid #d32f2f;
+}</string>
+        </property>
+        <layout class="QVBoxLayout" name="settingsLayout">
+         <property name="spacing">
+          <number>10</number>
+         </property>
+         <property name="leftMargin">
+          <number>14</number>
+         </property>
+         <property name="topMargin">
+          <number>14</number>
+         </property>
+         <property name="rightMargin">
+          <number>14</number>
+         </property>
+         <property name="bottomMargin">
+          <number>14</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="settingsTitleLabel">
+           <property name="text">
+            <string>Налаштування</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="themeLabel">
+           <property name="text">
+            <string>Тема</string>
+           </property>
+           <property name="property" stdset="0">
+            <string>sectionLabel</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="themeButtonsLayout">
+           <property name="spacing">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="themeDarkButton">
+             <property name="text">
+              <string>Dark</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <property name="property" stdset="0">
+              <string>optionButton</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="themeLightButton">
+             <property name="text">
+              <string>Light</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="property" stdset="0">
+              <string>optionButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QLabel" name="languageLabel">
+           <property name="text">
+            <string>Мова</string>
+           </property>
+           <property name="property" stdset="0">
+            <string>sectionLabel</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="languageButtonsLayout">
+           <property name="spacing">
+            <number>10</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="langUkButton">
+             <property name="text">
+              <string>Українська</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+             <property name="property" stdset="0">
+              <string>optionButton</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="langEnButton">
+             <property name="text">
+              <string>English</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+             <property name="property" stdset="0">
+              <string>optionButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="settingsSpacer">
+           <property name="orientation">
+            <enum>Qt::Orientation::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QFrame" name="detailsFrame">
+      <property name="minimumSize">
+       <size>
+        <width>270</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>320</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <layout class="QVBoxLayout" name="detailsLayout">
+       <property name="spacing">
+        <number>10</number>
+       </property>
+       <property name="leftMargin">
+        <number>12</number>
+       </property>
+       <property name="topMargin">
+        <number>12</number>
+       </property>
+       <property name="rightMargin">
+        <number>12</number>
+       </property>
+       <property name="bottomMargin">
+        <number>12</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="detailsHeaderLabel">
+         <property name="font">
+          <font>
+           <pointsize>16</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Деталі гри</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="coverFrame">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>140</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>140</height>
+          </size>
+         </property>
+         <layout class="QVBoxLayout" name="coverLayout">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="coverLabel">
+            <property name="minimumSize">
+             <size>
+              <width>240</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>240</width>
+              <height>120</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>ELDEN RING</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="gameNameLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>18</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Elden Ring</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="genreInfoLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>-1</pointsize>
+           <fontweight>DemiBold</fontweight>
+          </font>
+         </property>
+         <property name="text">
+          <string>Жанр: RPG</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="hoursInfoLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Ігрові години: 145 hours</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="totalAchievementsInfoLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Усього досягнень: 50</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="openedAchievementsInfoLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>-1</pointsize>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Відкрито: 39  (85% Complete)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="progressRowLayout">
+         <item>
+          <widget class="QProgressBar" name="progressBar">
+           <property name="textVisible">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="progressInfoLabel">
+           <property name="font">
+            <font>
+             <family>Roboto</family>
+            </font>
+           </property>
+           <property name="text">
+            <string>(39/50)</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="mutedLabel">
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>-1</pointsize>
+           <fontweight>ExtraBold</fontweight>
+          </font>
+         </property>
+         <property name="text">
+          <string>Останні досягнення</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QListWidget" name="recentAchievementsList">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="platformInfoLabel">
+         <property name="text">
+          <string>Платформа: Steam</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="viewAchievementsButton">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>42</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Roboto</family>
+           <pointsize>11</pointsize>
+           <fontweight>ExtraBold</fontweight>
+          </font>
+         </property>
+         <property name="text">
+          <string>Подивитись досягнення</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1220</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
